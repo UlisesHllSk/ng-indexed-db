@@ -1,27 +1,106 @@
-# NgIndexedDb
+# ng-indexed-db
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.3.
+ng-indexed-db is an Angular module that wraps IndexedDB API in RXJS, transform it into Observables
 
-## Development server
+## Installation
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+```shell
+  npm install ng-indexed-db
+```
 
-## Code scaffolding
+## Usage
+Import the `IndexedDBModule` into your Module:
+```typescript
+  import { IndexedDBModule } from "ng-indexed-db";
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+  @NgModule({
+    imports: [
+      IndexedDBModule.forRoot([
+        {
+          name: 'todo_database',
+          stores: [{ name: 'todo_store' }]
+        }
+      ])
+    ]
+  })
+  export class AppModule {}
+```
+IndexedDBModule forRoot method requires a database metadata collection  to create all the databases and table storage defined in the metadata.  
+**Note:** IndexedDBModule takes the firts element of the databases collections as **Default Database**
 
-## Build
+Database metadata type:
+```typescript
+  {
+    // Database name
+    name: string;
+    // Stores collections
+    stores: {
+      // Store name
+      name: string;
+    }[];
+  }
+```
+All generated stores will have a keyPath with the value: 'id'
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Inject the `IndexedDB` service into your component.
+```typescript
+  export class AppComponent {
 
-## Running unit tests
+    $list: Observable<any>;
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+    constructor(
+      private indexedDbService: IndexedDB
+    ) {
+      this.$list = this.indexedDbService.list('todo_table');
+    }
+  }
+```
+## Methods
+All methods recive an optional parameter that dfines the database name. If it doesn't recive a database name, the service takes the default database to do store requests.
 
-## Running end-to-end tests
+**list(storeName: string, databaseName?: string)**  
+Returns an Observable with the table list result.
+```typescript
+  this.indexedDbService.list('todo_table').subscribe(
+    response => // handle IndexedDb list result
+    error => // handle IndexedDb request error
+  );
+```  
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+**create(storeName: string, data: any, databaseName?: string)**  
+Store the given data.
+```typescript
+  this.indexedDbService.create('todo_table', {name: 'todo name'}).subscribe(
+    response => // handle IndexedDb store result
+    error => // handle IndexedDb request error
+  );
+```  
 
-## Further help
+**update(storeName: string, data: any, databaseName?: string)**  
+Updated stored data.
+```typescript
+  this.indexedDbService.update('todo_table', {name: 'todo name'}).subscribe(
+    response => // handle IndexedDb update result
+    error => // handle IndexedDb request error
+  );
+```  
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+**get(storeName: string, key: any, databaseName?: string)**  
+Returns an Observable with the object found in the table by the given key
+```typescript
+  this.indexedDbService.get('todo_table', 'todo name').subscribe(
+    response => // handle IndexedDb update result
+    error => // handle IndexedDb request error
+  );
+```  
+
+**delete(storeName: string, key: any, databaseName?: string)**  
+Returns an Observable with the object found in the table by the given key
+```typescript
+  this.indexedDbService.delete('todo_table', 'todo name').subscribe(
+    response => // handle IndexedDb update result
+    error => // handle IndexedDb request error
+  );
+```
+
+

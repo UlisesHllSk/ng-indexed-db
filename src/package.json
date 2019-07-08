@@ -1,0 +1,21 @@
+{
+  "name": "ng-indexed-db",
+  "version": "0.0.0-beta.0",
+  "description": "An IndexedDB Angular module wrapped in RXJS",
+  "keywords": [
+    "Angular",
+    "RXJS",
+    "IndexedDB"
+  ],
+  "license": "mit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/t-palmer/ng-example-library"
+  },
+  "peerDependencies": {
+    "@angular/common": "~8.0.1",
+    "@angular/compiler": "~8.0.1",
+    "@angular/core": "~8.0.1",
+    "rxjs": "~6.4.0"
+  }
+}
