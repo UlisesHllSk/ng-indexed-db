@@ -1,6 +1,6 @@
 # ng-indexed-db
 
-ng-indexed-db is an Angular module that wraps IndexedDB API in RXJS, transform it into Observables
+ng-indexed-db is an Angular module that wraps IndexedDB API in RXJS, transforming it into Observable
 
 ## Installation
 
